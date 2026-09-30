@@ -24,4 +24,4 @@ Framework preset: `None`. Build command: vazio. Build output directory: `public`
 
 Nome: João Antonio Siedlarczyk de Lima
 RA: 2026108077
-URL: https://joaosiedAvalia2bim.pages.dev
+URL: https://desenho-joaosied.pages.dev
