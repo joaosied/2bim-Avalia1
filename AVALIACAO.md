@@ -31,11 +31,11 @@ O workflow final usa o GITHUB_TOKEN oficial, com contents: read, pull-requests: 
 - CI correspondente: https://github.com/joaosied/2bim-Avalia1/actions/runs/38644741812
 - Primeiro comentário real da IA: https://github.com/joaosied/2bim-Avalia1/pull/2#issuecomment-6179443538
 - Segundo comentário real da IA: https://github.com/joaosied/2bim-Avalia1/pull/2#issuecomment-6179477610
-- Merge autorizado: commit https://github.com/joaosied/2bim-Avalia1/commit/54ccdfb
+- Merge realizado: commit https://github.com/joaosied/2bim-Avalia1/commit/54ccdfb
 
-Na primeira revisão, a IA apontou como alto risco a interpolação direta de github.base_ref em Bash, com possibilidade de injeção de comando. O workflow foi ajustado para receber BASE_REF por env. Na segunda revisão, a IA registrou que não encontrou vulnerabilidades acionáveis. O endpoint de teste vulnerável foi removido no commit https://github.com/joaosied/2bim-Avalia1/commit/95c87ce9b6b334feb55e4fe1b4df9f2902410523.
+O erro de permissão ocorreu porque o workflow declarou permissions e não incluiu pull-requests: write. Nesse caso, as permissões não listadas ficam como none; por isso o GITHUB_TOKEN não podia criar comentário e o step gh pr comment falhou com a mensagem real Resource not accessible by integration.
 
-A crítica à IA é que a primeira análise atribuiu confiança alta a um risco potencial do workflow, mas não encontrou uma exploração concreta no caso executado; ainda assim, o alerta era relevante porque a interpolação de dados controlados pelo evento em shell é uma prática insegura. A segunda revisão foi mais adequada ao estado corrigido.
+Na primeira revisão, a IA enfatizou a interpolação direta de github.base_ref em Bash e sugeriu passar BASE_REF por env. Porém, ela não apontou o SQL concatenado do endpoint vulnerável e omitiu a vulnerabilidade de SQL Injection que motivou o teste. Essa foi uma lacuna relevante: a revisão priorizou um risco potencial do workflow, mas não identificou o problema de entrada controlada concatenada na consulta. Depois, o workflow foi ajustado para receber BASE_REF por env, a segunda revisão não encontrou vulnerabilidades acionáveis e o endpoint vulnerável foi removido no commit https://github.com/joaosied/2bim-Avalia1/commit/95c87ce9b6b334feb55e4fe1b4df9f2902410523.
 
 ## Tarefa 4 — Migrações D1
 
@@ -58,7 +58,7 @@ O CI do PR #3 passou nos dois eventos:
 
 ### Merge e execução remota real
 
-O PR #3 foi mergeado com autorização explícita no commit https://github.com/joaosied/2bim-Avalia1/commit/701704ac0db52caa59ad800aa082ac97fce5918e.
+O PR #3 foi mergeado no commit https://github.com/joaosied/2bim-Avalia1/commit/701704ac0db52caa59ad800aa082ac97fce5918e.
 
 - Execução real do migrar.yml: https://github.com/joaosied/2bim-Avalia1/actions/runs/38648948349
 - Log do job: https://github.com/joaosied/2bim-Avalia1/actions/runs/38648948349/job/116142695274
@@ -98,11 +98,15 @@ Por causa dessa falha, não houve resumo de IA publicado nessa execução. Esta 
 
 1. Com um PR aberto, um push na branch dispara push e pull_request/synchronize. O check usado pela proteção da main é o do pull_request, pois ele testa o merge da branch com a main.
 
-2. Em workflows acionados por pull_request, secrets do repositório não são disponibilizados a PRs de fork e o GITHUB_TOKEN recebe permissões reduzidas, evitando o vazamento do token. Isso não deve ser confundido com pull_request_target: nesse evento, o workflow pode ter acesso a secrets e a permissões maiores, portanto nunca deve executar código não confiável do fork com credenciais privilegiadas.
+2. Em um pull_request vindo de fork, os secrets do repositório não são disponibilizados e o GITHUB_TOKEN recebe permissões reduzidas. Isso impede o ataque em que o código alterado no fork adiciona um step para imprimir, fazer upload ou enviar o token a um servidor externo. A proteção depende do evento: pull_request_target pode ter acesso a secrets e a permissões maiores; por isso nunca se deve executar código não confiável do fork nesse contexto.
 
 3. permissions aplica o princípio do menor privilégio: o workflow recebe somente leitura do conteúdo, escrita no PR e a permissão de inferência necessária.
 
-4. A revisão da IA não substitui o status check determinístico. A IA apoia a revisão, mas pode errar; o CI continua sendo a regra objetiva para o merge.
+4. A revisão da IA não substitui o status check determinístico. Na Tarefa 3, a IA enfatizou github.base_ref e omitiu o SQL concatenado/SQL Injection, mostrando que pode deixar passar o problema mais importante. O CI determinístico continua sendo a regra objetiva para o merge; a IA serve como apoio e seus achados precisam ser conferidos.
+
+## Segundo merge sem migrations
+
+A branch teste-sem-migracao foi criada a partir da main para um novo PR contra a main. Este PR altera somente README.md e AVALIACAO.md; não há alterações em migrations/ nem em .github/workflows/. O objetivo é comprovar que um merge sem migrations não dispara migrar.yml. A evidência final será registrada após o merge, conferindo a aba Actions filtrada pelo workflow migrar.yml.
 
 ## Checks do PR #4
 
@@ -115,8 +119,7 @@ Após a atualização desta avaliação, o PR #4 foi validado com 3 checks verde
 
 ## Estado da entrega
 
-- PR #2: mergeado com autorização, commit 54ccdfb.
-- PR #3: mergeado com autorização, commit 701704a.
-- PR #4: aberto, branch entrega → main: https://github.com/joaosied/2bim-Avalia1/pull/4
-- O merge final do PR #4 ainda não foi realizado.
+- PR #2: mergeado, commit 54ccdfb.
+- PR #3: mergeado, commit 701704a.
+- PR #4: mergeado no commit https://github.com/joaosied/2bim-Avalia1/commit/6e8a35c.
 - O arquivo está no caminho correto da branch entrega: https://github.com/joaosied/2bim-Avalia1/blob/entrega/AVALIACAO.md
