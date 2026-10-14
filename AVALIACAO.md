@@ -98,7 +98,7 @@ Por causa dessa falha, não houve resumo de IA publicado nessa execução. Esta 
 
 1. Com um PR aberto, um push na branch dispara push e pull_request/synchronize. O check usado pela proteção da main é o do pull_request, pois ele testa o merge da branch com a main.
 
-2. Em um pull_request vindo de fork, os secrets do repositório não são disponibilizados e o GITHUB_TOKEN recebe permissões reduzidas. Isso impede o ataque em que o código alterado no fork adiciona um step para imprimir, fazer upload ou enviar o token a um servidor externo. A proteção depende do evento: pull_request_target pode ter acesso a secrets e a permissões maiores; por isso nunca se deve executar código não confiável do fork nesse contexto.
+2. Em um pull_request vindo de fork, os repository secrets não são disponibilizados ao workflow do fork. O GITHUB_TOKEN continua existindo, mas recebe permissões reduzidas, o que limita o impacto caso seja exposto. Isso não torna impossível que um step malicioso leia e exfiltre o próprio GITHUB_TOKEN para um servidor externo; as permissões reduzidas limitam o que ele consegue fazer, não o envio do valor. A proteção principal é impedir a exposição de um PAT ou outro secret privilegiado do repositório. A proteção depende do evento: pull_request_target pode ter acesso a secrets e a permissões maiores; por isso nunca se deve executar código não confiável do fork nesse contexto.
 
 3. permissions aplica o princípio do menor privilégio: o workflow recebe somente leitura do conteúdo, escrita no PR e a permissão de inferência necessária.
 
