@@ -38,6 +38,7 @@ jobs:
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_PAT }}
         with:
+          token: ${{ secrets.COPILOT_PAT }}
           prompt-file: prompt.txt
           system-prompt: Você é um revisor de código objetivo.
 
