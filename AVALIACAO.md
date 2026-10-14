@@ -14,7 +14,7 @@ O SQLite foi usado antes do D1 porque o D1 é baseado em SQLite. Assim, erros de
 ## Tarefa 2 — Proteção da main
 
 A regra da main exige pull request e o status check verificar aprovado.  
-PR bloqueado e liberado: https://github.com/joaosied/2bim-Avalia1/pull/1
+PR bloqueado e liberado: https://github.com/joaosied/2bim-Avalia1/pull/1. A página do PR confirma 2 checks bem-sucedidos e nenhum conflito.
 
 A tentativa direta de push foi recusada por GH013 porque o check obrigatório verificar era esperado:
 
@@ -106,7 +106,7 @@ Por causa dessa falha, não houve resumo de IA publicado nessa execução. Esta 
 
 ## Segundo merge sem migrations
 
-A branch teste-sem-migracao foi criada a partir da main para um novo PR contra a main. Este PR altera somente README.md e AVALIACAO.md; não há alterações em migrations/ nem em .github/workflows/. O objetivo é comprovar que um merge sem migrations não dispara migrar.yml. A evidência final será registrada após o merge, conferindo a aba Actions filtrada pelo workflow migrar.yml.
+A branch teste-sem-migracao foi criada a partir da main e o PR real é https://github.com/joaosied/2bim-Avalia1/pull/5, contra a main. A comparação confirma 2 arquivos alterados: README.md e AVALIACAO.md; não há alterações em migrations/ nem em .github/workflows/. O objetivo é comprovar que um merge sem migrations não dispara migrar.yml. Antes do merge, os checks do PR passaram e a revisão real da IA foi publicada em https://github.com/joaosied/2bim-Avalia1/pull/5#issuecomment-6180402221. A prova final de ausência de nova execução do migrar.yml será registrada após o merge, conferindo a aba Actions filtrada pelo workflow.
 
 ## Checks do PR #4
 
@@ -123,3 +123,4 @@ Após a atualização desta avaliação, o PR #4 foi validado com 3 checks verde
 - PR #3: mergeado, commit 701704a.
 - PR #4: mergeado no commit https://github.com/joaosied/2bim-Avalia1/commit/6e8a35c.
 - O arquivo está no caminho correto da branch entrega: https://github.com/joaosied/2bim-Avalia1/blob/entrega/AVALIACAO.md
+- PR #5 aberto, sem alterações em migrations/ ou workflows: https://github.com/joaosied/2bim-Avalia1/pull/5
