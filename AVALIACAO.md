@@ -98,11 +98,20 @@ Por causa dessa falha, não houve resumo de IA publicado nessa execução. Esta 
 
 1. Com um PR aberto, um push na branch dispara push e pull_request/synchronize. O check usado pela proteção da main é o do pull_request, pois ele testa o merge da branch com a main.
 
-2. Um PR de fork não recebe secrets porque o autor poderia alterar o workflow para imprimir ou exfiltrar um segredo. Isso impede o vazamento do token.
+2. Em workflows acionados por pull_request, secrets do repositório não são disponibilizados a PRs de fork e o GITHUB_TOKEN recebe permissões reduzidas, evitando o vazamento do token. Isso não deve ser confundido com pull_request_target: nesse evento, o workflow pode ter acesso a secrets e a permissões maiores, portanto nunca deve executar código não confiável do fork com credenciais privilegiadas.
 
 3. permissions aplica o princípio do menor privilégio: o workflow recebe somente leitura do conteúdo, escrita no PR e a permissão de inferência necessária.
 
 4. A revisão da IA não substitui o status check determinístico. A IA apoia a revisão, mas pode errar; o CI continua sendo a regra objetiva para o merge.
+
+## Checks do PR #4
+
+Após a atualização desta avaliação, o PR #4 foi validado com 3 checks verdes e sem conflitos:
+
+- CI no push: https://github.com/joaosied/2bim-Avalia1/actions/runs/38649210937
+- Revisão por IA no pull_request: https://github.com/joaosied/2bim-Avalia1/actions/runs/38649217726
+- CI no pull_request: https://github.com/joaosied/2bim-Avalia1/actions/runs/38649217874
+- Comentário real da IA sobre a documentação: https://github.com/joaosied/2bim-Avalia1/pull/4#issuecomment-6180113038
 
 ## Estado da entrega
 
